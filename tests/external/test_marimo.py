@@ -42,3 +42,11 @@ def test_notebook_to_py_marimo(py_marimo, notebook):
 def test_marimo_py_to_notebook(py_marimo, notebook):
     actual = marimo_py_to_notebook(py_marimo)
     compare_notebooks(actual, notebook)
+
+
+@pytest.mark.requires_marimo
+def test_marimo_round_trip_with_non_ascii_characters():
+    notebook = new_notebook(cells=[new_code_cell('city = "Hämeenlinna 東京 🎉"')])
+    text = notebook_to_marimo_py(notebook)
+    assert 'city = "Hämeenlinna 東京 🎉"' in text
+    compare_notebooks(marimo_py_to_notebook(text), notebook)
